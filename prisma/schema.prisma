@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Starship {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                String   @unique
+  model               String
+  crew_max_amount     Int
+  crew_current_amount Int
+  crew_name           String?
+  //crew People[]
+  crew                People[]
+}
+
+model People {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String    @unique
+  height        String
+  mass          String
+  //in_starship Starship? @relation(fields: [starship_name], references: [name] )
+  starship_name String
+  Starship      Starship? @relation(fields: [starshipId], references: [id])
+  starshipId    String?   @db.ObjectId
+}
